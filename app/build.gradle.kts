@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
+    id("com.google.relay")
 }
 
 android {
@@ -19,6 +20,9 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
     }
 
@@ -43,7 +47,7 @@ android {
         viewBinding = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
+        kotlinCompilerExtensionVersion = "1.5.4"
     }
     packaging {
         resources {
@@ -68,13 +72,18 @@ dependencies {
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.4")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.4")
+    implementation("androidx.datastore:datastore-preferences-core:1.0.0")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
+
+
+
 
     implementation("com.google.guava:guava:32.1.2-android")
 
     val roomVersion = "2.6.0"
 
     implementation("androidx.room:room-runtime:$roomVersion")
+
     ksp("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
 
@@ -95,7 +104,7 @@ dependencies {
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-    runtimeOnly("androidx.compose.material3:material3:1.1.2")
+    ksp("androidx.compose.material3:material3:1.1.2")
 
     //hilt dagger
 
@@ -107,6 +116,15 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0-rc01")
 
 
+    //coil
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+    //mosh
+    implementation("com.squareup.moshi:moshi:1.15.0")
+    implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
+
+    //splash screen
+    implementation("androidx.core:core-splashscreen:1.1.0-alpha02")
 
 }
 

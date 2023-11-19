@@ -6,7 +6,10 @@ import androidx.room.RoomDatabase
 @Database(
     entities = [User::class],
     version = 1,
-    exportSchema = false
+//    exportSchema = true,
+//    autoMigrations = [
+//        AutoMigration(from = 1, to = 2)
+//    ]
 )
 abstract class UserRoomDatabase : RoomDatabase() {
     abstract val userDAO: UserDAO

@@ -9,10 +9,6 @@ class UserRepositoryImplementation(
         return dao.getUsers()
     }
 
-    override suspend fun loadUserById(uid: Int): User? {
-        return dao.loadUserById(uid)
-    }
-
     override suspend fun checkIfUsernameExists(username: String): Int {
         return dao.checkIfUsernameExists(username)
     }
@@ -27,5 +23,9 @@ class UserRepositoryImplementation(
 
     override suspend fun delete(user: User) {
         return dao.delete(user)
+    }
+
+    override suspend fun getUserFromUsername(username: String): User? {
+        return dao.getUserByUsername(username)
     }
 }

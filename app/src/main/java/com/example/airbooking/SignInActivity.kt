@@ -1,7 +1,8 @@
 package com.example.airbooking
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -44,8 +45,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.airbooking.data.Session
 import com.example.airbooking.data.User
 import com.example.airbooking.events.UserEvent
+import com.example.airbooking.hashing.Guava
 import com.example.airbooking.ui.theme.AirBookingTheme
 import com.example.airbooking.viewModel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,7 +66,6 @@ class SignInActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
                     SigningIn()
                 }
             }
@@ -71,9 +73,7 @@ class SignInActivity : ComponentActivity() {
     }
 
     @Composable
-    fun SigningIn() {
-        val viewModel: UserViewModel = hiltViewModel<UserViewModel>()
-
+    fun SigningIn(viewModel: UserViewModel = hiltViewModel()) {
         val mContext = LocalContext.current
         val fontFamily = FontFamily(
             Font(R.font.cooper_black_regular, FontWeight.Normal)
@@ -159,15 +159,27 @@ class SignInActivity : ComponentActivity() {
                     }
                 )
                 ElevatedButton(onClick = {
+                    val guava = Guava()
+                    val hash = guava.hashingSha256(password)
+                    viewModel.onEvent(UserEvent.GetUserByUsername(username))
+                    val imageUri = viewModel.userState.value.profilePictureUri
+                    val user = User(username=username, passwordHash = hash, profilePictureUri = imageUri)
+                    viewModel.onEvent(UserEvent.ValidateUser(user))
 
-                    val isValid = viewModel.onEvent(UserEvent.ValidateUser(User(username = username, passwordHash = password)))
-                    Log.d("What's Inside isValid", isValid.toString())
-//                    if (isValid) {
-//                        mContext.startActivity(Intent(mContext, DashboardActivity::class.java))
-//                    }
-//                    else
-//                        Toast.makeText(mContext, "Invalid User", Toast.LENGTH_LONG).show()
+                    when (viewModel.isValid.value.state) {
+                        1 -> {
+                            Toast.makeText(mContext, "Login Was Successful", Toast.LENGTH_LONG).show()
+                            saveSession(user, viewModel)
 
+                            mContext.startActivity(Intent(mContext, DashboardActivity::class.java))
+                        }
+                        0 -> {
+                            Toast.makeText(mContext, "Invalid User", Toast.LENGTH_LONG).show()
+                        }
+                        else -> {
+                            Toast.makeText(mContext, "Not Yet Entered The Credentials", Toast.LENGTH_LONG).show()
+                        }
+                    }
                 }) {
                     Text(text = "Next")
                 }
@@ -175,6 +187,16 @@ class SignInActivity : ComponentActivity() {
 
         }
     }
+
+    private fun saveSession(user: User, viewModel: UserViewModel) {
+        viewModel.session.saveSession(
+            session = Session(
+                user = user
+            )
+        )
+
+    }
+
 
 
 }

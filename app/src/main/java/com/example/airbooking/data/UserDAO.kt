@@ -12,9 +12,6 @@ interface UserDAO {
     @Query("SELECT * FROM user")
     fun getUsers(): Flow<List<User>>
 
-    @Query("SELECT * FROM user WHERE uid = :uid")
-    suspend fun loadUserById(uid: Int): User?
-
     @Query("""
         SELECT CASE
             WHEN EXISTS (
@@ -40,6 +37,9 @@ interface UserDAO {
         END AS result;
         """)
     suspend fun validate(username: String, passwordHash: String): Int
+
+    @Query("SELECT * FROM User WHERE username = :username")
+    suspend fun getUserByUsername(username: String): User?
 
 
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="kid_avatar">https://cdn.pixabay.com/photo/2016/08/20/05/38/avatar-1606916_1280.png</string>
+    <string name="man_silhouette">https://cdn.pixabay.com/photo/2013/07/13/12/07/avatar-159236_1280.png</string>
+    <string name="nerdy_computer_guy">https://cdn.pixabay.com/photo/2013/07/13/10/07/man-156584_1280.png</string>
+    <string name="blue_hijabi">https://cdn.pixabay.com/photo/2016/08/20/05/36/avatar-1606914_1280.png</string>
+    <string name="pink_hijabi">https://cdn.pixabay.com/photo/2017/04/30/11/42/hijab-2272708_1280.png</string>
+</resources>
